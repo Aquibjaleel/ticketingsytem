@@ -8,6 +8,13 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+# Copy the script and make it executable
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Use the script as the container entrypoint
+ENTRYPOINT ["/app/entrypoint.sh"]
+
 # Install system dependencies (needed for some Python packages)
 RUN apt-get update && apt-get install -y \
     build-essential \

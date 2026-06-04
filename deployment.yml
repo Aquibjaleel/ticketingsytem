@@ -6,7 +6,7 @@ metadata:
   labels:
     app: ticketing-app
 spec:
-  replicas: 
+  replicas: 1
   selector:
     matchLabels:
       app: ticketing-app
@@ -17,11 +17,31 @@ spec:
     spec:
       containers:
       - name: ticketing-app
-      
         image: 218014315265.dkr.ecr.us-east-1.amazonaws.com/my-ecr-repo:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
+        env:
+        # These pull from the Kubernetes Secret we created
+        - name: SECRET_KEY
+          valueFrom: { secretKeyRef: { name: ticketing-app-secrets, key: SECRET_KEY } }
+        - name: DB_USERNAME
+          valueFrom: { secretKeyRef: { name: ticketing-app-secrets, key: DB_USERNAME } }
+        - name: DB_PASSWORD
+          valueFrom: { secretKeyRef: { name: ticketing-app-secrets, key: DB_PASSWORD } }
+        - name: DB_URL
+          valueFrom: { secretKeyRef: { name: ticketing-app-secrets, key: DB_URL } }
+        - name: DB_NAME
+          valueFrom: { secretKeyRef: { name: ticketing-app-secrets, key: DB_NAME } }
+        - name: AI_API_KEY
+          valueFrom: { secretKeyRef: { name: ticketing-app-secrets, key: AI_API_KEY } }
+        # Non-sensitive configuration remains here
+        - name: DB_PORT
+          value: "3306"
+        - name: AI_ENDPOINT
+          value: "https://api.openai.com/v1"
+        - name: AI_PROVIDER
+          value: "openai"
 ---
 apiVersion: v1
 kind: Service
@@ -29,7 +49,7 @@ metadata:
   name: ticketing-app-service
   namespace: default
 spec:
-  type: LoadBalancer #
+  type: LoadBalancer
   selector:
     app: ticketing-app
   ports:
