@@ -16,7 +16,6 @@ RUN apt-get update && apt-get install -y \
 # Copy requirements first for caching
 COPY requirements.txt .
 
-RUN apk update && apk add --no-cache jq
 
 # Upgrade pip and install Python dependencies
 RUN pip install --upgrade pip \
