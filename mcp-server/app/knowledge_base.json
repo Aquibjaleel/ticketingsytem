@@ -1,0 +1,133 @@
+[
+  {
+    "id": "KB001",
+    "title": "Password Reset and Token Expired",
+    "category": "Access",
+    "keywords": ["password reset", "token expired", "login", "signin", "authentication", "sso"],
+    "url": "/kb/password-reset-token-expired",
+    "steps": [
+      "Verify the password reset completed successfully",
+      "Ask the user to clear browser session or use incognito mode",
+      "Check SSO or identity provider logs",
+      "Confirm account is not locked"
+    ]
+  },
+  {
+    "id": "KB002",
+    "title": "VPN Connection Troubleshooting",
+    "category": "Network",
+    "keywords": ["vpn", "cannot connect", "remote access", "tunnel", "forticlient", "vpn not working"],
+    "url": "/kb/vpn-troubleshooting",
+    "steps": [
+      "Verify internet connectivity",
+      "Check VPN client version",
+      "Confirm user group membership",
+      "Review VPN gateway logs"
+    ]
+  },
+  {
+    "id": "KB003",
+    "title": "Outlook Not Opening",
+    "category": "Software",
+    "keywords": ["outlook", "mail", "email", "not opening", "freeze", "crash"],
+    "url": "/kb/outlook-not-opening",
+    "steps": [
+      "Restart Outlook in safe mode",
+      "Disable problematic add-ins",
+      "Check Office updates",
+      "Repair Office installation"
+    ]
+  },
+  {
+    "id": "KB004",
+    "title": "Account Locked After Multiple Login Attempts",
+    "category": "Access",
+    "keywords": ["account locked", "locked out", "too many attempts", "login failed", "cannot login"],
+    "url": "/kb/account-locked",
+    "steps": [
+      "Check whether the account is locked in the identity system",
+      "Unlock the account if policy allows",
+      "Ask the user to retry after password verification",
+      "Review failed login attempt logs"
+    ]
+  },
+  {
+    "id": "KB005",
+    "title": "MFA Verification Failure",
+    "category": "Access",
+    "keywords": ["mfa", "otp", "verification code", "2fa", "authenticator", "code not working"],
+    "url": "/kb/mfa-verification-failure",
+    "steps": [
+      "Verify device time is correct",
+      "Ask the user to retry with a fresh code",
+      "Check MFA enrollment status",
+      "Reset MFA if needed"
+    ]
+  },
+  {
+    "id": "KB006",
+    "title": "Printer Offline Troubleshooting",
+    "category": "Hardware",
+    "keywords": ["printer offline", "printer not printing", "printer", "cannot print", "print queue"],
+    "url": "/kb/printer-offline",
+    "steps": [
+      "Check printer power and network connection",
+      "Clear stuck print jobs",
+      "Reinstall or update printer driver",
+      "Restart print spooler service"
+    ]
+  },
+  {
+    "id": "KB007",
+    "title": "Laptop Running Slow",
+    "category": "Hardware",
+    "keywords": ["laptop slow", "slow system", "performance issue", "lagging", "hang", "freezing"],
+    "url": "/kb/laptop-running-slow",
+    "steps": [
+      "Check CPU and memory usage",
+      "Remove unnecessary startup programs",
+      "Verify available disk space",
+      "Run malware scan and system updates"
+    ]
+  },
+  {
+    "id": "KB008",
+    "title": "Wi-Fi Connection Issues",
+    "category": "Network",
+    "keywords": ["wifi", "wi-fi", "wireless", "cannot connect internet", "network disconnected", "internet not working"],
+    "url": "/kb/wifi-connection-issues",
+    "steps": [
+      "Check whether Wi-Fi is enabled",
+      "Reconnect to the correct wireless network",
+      "Restart network adapter",
+      "Verify router or access point status"
+    ]
+  },
+
+  {
+  "id": "KB009",
+  "title": "VPN Authentication Failure",
+  "category": "Network",
+  "keywords": ["vpn login failed", "vpn authentication", "vpn credentials", "vpn login issue"],
+  "url": "/kb/vpn-auth-failure",
+  "steps": [
+    "Verify username and password",
+    "Check authentication server logs",
+    "Reset credentials if required",
+    "Ensure correct domain is used"
+  ]
+},
+{
+  "id": "KB010",
+  "title": "VPN Slow Performance",
+  "category": "Network",
+  "keywords": ["vpn slow", "vpn latency", "slow connection vpn", "vpn lag"],
+  "url": "/kb/vpn-slow",
+  "steps": [
+    "Check network bandwidth",
+    "Switch VPN server location",
+    "Disable background applications",
+    "Test connection speed without VPN"
+  ]
+}
+]

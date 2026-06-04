@@ -1,0 +1,339 @@
+{% extends "flicket_base.html" %} {% block content %}
+<div class="container">
+  {% include 'flicket_apijson_users.html' %}
+
+  <div class="row m-2">
+    <div class="col p-2 border rounded bg-white">
+      <div class="row">
+        <div class="col">
+          <div class="row m-0">
+            <div class="col-2 align-self-center">{{ ticket.id_zfill }}</div>
+            <div class="col flicket-ticket-title">{{ ticket.title }}</div>
+          </div>
+
+          <div class="row m-0">
+            <div class="col">
+              <div class="flicket-tickets-title">{{ _('Department') }}</div>
+              <div class="flicket-tickets-content">
+                {{ ticket.category.department.department }} {%- if
+                change_category %}
+                <a
+                  href="{{ url_for('flicket_bp.ticket_department_category', ticket_id = ticket.id) }}"
+                  title="{{ _('category') }}"
+                >
+                  <i class="fas fa-edit"></i>
+                </a>
+                {%- endif %}
+              </div>
+            </div>
+            <div class="col">
+              <div class="flicket-tickets-title">{{ _('Category') }}</div>
+              <div class="flicket-tickets-content">
+                {{ ticket.category.category }} {%- if change_category %}
+                <a
+                  href="{{ url_for('flicket_bp.ticket_department_category', ticket_id = ticket.id) }}"
+                  title="{{ _('department') }}"
+                >
+                  <i class="fas fa-edit"></i>
+                </a>
+                {%- endif %}
+              </div>
+            </div>
+            <div class="col">
+              <div class="flicket-tickets-title">{{ _('Status') }}</div>
+              <div class="flicket-tickets-content">
+                {{ ticket.current_status.status }}
+              </div>
+            </div>
+            <div class="col">
+              <div class="flicket-tickets-title">{{ _('Priority') }}</div>
+              <div
+                class="flicket-tickets-content
+                                {%- if ticket.current_status.status == 'Closed' -%}
+                                    {{ ' ' }}flicket-status-closed
+                                {%- endif -%}
+                                {%- if ticket.ticket_priority.priority == 'high' -%}
+                                    {{ ' ' }}flicket-status-high
+                                {%- elif ticket.ticket_priority.priority == 'medium' -%}
+                                    {{ ' ' }}flicket-status-medium
+                                {%- elif ticket.ticket_priority.priority == 'low' -%}
+                                    {{ ' ' }}flicket-status-low
+                                {%- endif %}"
+              >
+                {{ ticket.ticket_priority.priority }}
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="flicket-tickets-title">{{ _('Assigned') }}</div>
+              <div class="flicket-tickets-content">
+                {% if ticket.assigned.username %} {{ ticket.assigned.name }} {%
+                else %}ticket not assigned{% endif %}
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="flicket-tickets-title">{{ _('Total Hours') }}</div>
+              <div class="flicket-tickets-content">
+                {{ ticket.total_hours }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-auto align-self-center">
+          <div class="row">
+            <div class="col text-right">
+              <a
+                class="btn btn-outline-primary btn-xxs"
+                href="{{ url_for('flicket_bp.ticket_claim', ticket_id = ticket.id) }}"
+              >
+                {{ _('claim') }}
+              </a>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col text-right">
+              <a
+                class="btn btn-outline-primary btn-xxs"
+                href="{{ url_for('flicket_bp.release', ticket_id = ticket.id) }}"
+              >
+                {{ _('release') }}
+              </a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col text-right">
+              <a
+                class="btn btn-outline-primary btn-xxs"
+                href="{{ url_for('flicket_bp.ticket_assign', ticket_id = ticket.id) }}"
+              >
+                {{ _('assign') }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row m-2 border rounded p-2 bg-white">
+    <div class="col align-self-center small">
+      Subscribed: {% for s in ticket.subscribers %}
+      <a href="mailto:{{ s.user.email }}">{{ s.user.name }}</a>
+      {%- if (ticket.is_subscribed(g.user) and s.user == g.user) or
+      g.user.is_admin or g.user.is_super_user -%} &nbsp;<a
+        class="small"
+        style="color: red"
+        href="{{ url_for('flicket_bp.unsubscribe_ticket', ticket_id = ticket.id, user_id=s.user.id) }}"
+        title="unsubscribe"
+        ><i class="fas fa-times"></i
+      ></a>
+      {%- endif -%} {{ ", " if not loop.last }} {% endfor %}
+    </div>
+    <form
+      action=""
+      class="form form-inline"
+      enctype="multipart/form-data"
+      method="post"
+      name="subscribe_user"
+    >
+      {{ form.hidden_tag() }}
+      <div class="col">
+        {{ subscribers_form.username(class="form-control form-control-sm mr-1",
+        id="autocomplete-username", placeholder="User Name") }}
+      </div>
+      {% if subscribers_form.username.errors %}
+      <div class="btn btn-warning btn-sm">Invalid username.</div>
+      {% endif %}
+      <div class="col">
+        {{ subscribers_form.sub_user(class="btn btn-primary btn-sm") }}
+      </div>
+    </form>
+  </div>
+
+  <div class="row m-2">
+    <div class="col">
+      <ul class="pagination pagination-sm m-0">
+        <li
+          class="page-item {% if not replies.has_prev -%} disabled {%- endif -%}"
+        >
+          <a
+            class="page-link"
+            href="{{ url_for('flicket_bp.ticket_view_detail', ticket_id=ticket.id, page=replies.prev_num, **request.args) }}"
+          >
+            &lt;&lt;
+          </a>
+        </li>
+
+        {% for page in replies.iter_pages() %} {%- if page -%} {%- if page !=
+        replies.page -%}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{{ url_for('flicket_bp.ticket_view_detail', ticket_id=ticket.id, page=page, **request.args) }}"
+          >
+            {{ page }}
+          </a>
+        </li>
+        {%- else -%}
+        <li class="page-item active">
+          <a
+            class="page-link"
+            href="{{ url_for('flicket_bp.ticket_view_detail', ticket_id=ticket.id, page=page, **request.args) }}"
+          >
+            {{ page }}
+          </a>
+        </li>
+        {%- endif -%} {%- else -%}
+        <li class="page-item">
+          <a href="">...</a>
+        </li>
+        {%- endif -%} {%- endfor -%}
+
+        <li
+          class="page-item {% if not replies.has_next -%} disabled {%- endif -%}"
+        >
+          <a
+            class="page-link"
+            href="{{ url_for('flicket_bp.ticket_view_detail', ticket_id=ticket.id, page=replies.next_num, **request.args) }}"
+          >
+            &gt;&gt;
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row m-2 justify-content-end">
+    <button id="toggle-ai-view" class="btn btn-sm btn-info shadow-sm">
+      <i class="fas fa-robot"></i> {{ _('Switch to AI Analysis') }}
+    </button>
+  </div>
+
+  <div id="original-view">
+    {% set content = ticket %} {% set _replies = None %} {%
+    include('flicket_post.html') %}
+  </div>
+
+  <div id="ai-view" style="display: none">
+    {% if ai_summary %}
+    <div class="row m-2">
+      <div class="col p-0 border rounded bg-white overflow-hidden shadow-sm">
+        <div class="p-2 border-bottom mb-0" style="background-color: #f8f9fa">
+          <strong class="text-primary">
+            <i class="fas fa-robot mr-1"></i> {{ _('AI Ticket Summary') }}
+          </strong>
+          <span class="badge badge-info float-right" style="font-size: 0.75rem">
+            {{ config['AI_PROVIDER'] | upper}} AI</span
+          >
+        </div>
+        <div class="p-3">
+          <div class="text-dark" style="font-size: 0.95rem; line-height: 1.5">
+            {{ ai_summary | markdown }}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="row m-2">
+      <div class="col-md-7 p-0 pr-md-2 mb-2 mb-md-0">
+        <div class="h-100 p-3 border rounded bg-white shadow-sm border-primary">
+          <h6 class="text-muted small text-uppercase font-weight-bold">
+            <i class="fas fa-book-reader text-primary"></i> {{ _('Recommended Solution') }}
+          </h6>
+          <!--
+                    <div class="mt-2">
+                        <a href="#" class="btn btn-primary btn-block text-left py-2">
+                            <strong>KB-4092:</strong> Troubleshooting DB Deadlocks...
+                        </a>
+                        <p class="small text-muted mt-2 mb-0">AI identifies this as a 94% match for the symptoms
+                            described.
+                        </p>
+                    </div>
+                -->
+          <div class="mt-2">
+            <a
+              href="{{ url_for('flicket_bp.kb_view', kb_id="1") }}"
+              target="_blank"
+              class="btn btn-primary btn-block text-left py-2"
+            >
+              <strong>KB-4092:</strong> Troubleshooting DB Deadlocks...
+            </a>
+
+            <p class="small text-muted mt-2 mb-0">
+              AI identifies this as a 94% match for the symptoms described.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-5 p-0 pl-md-2">
+        <div class="h-100 p-3 border rounded bg-white shadow-sm border-warning">
+          <h6 class="text-muted small text-uppercase font-weight-bold">
+            <i class="fas fa-project-diagram text-warning"></i> {{ _('Pattern Detection') }}
+          </h6>
+          <div class="mt-2">
+            <p class="small mb-2">
+              AI found 3 matching incidents in the last 24h.
+            </p>
+            <!-- <button type="button" class="btn btn-warning btn-sm btn-block font-weight-bold">
+                            <i class="fas fa-share-alt"></i> {{ _('Propose as Problem') }}
+                        </button> -->
+            <form
+              method="POST"
+              action="{{ url_for('flicket_bp.generate_problem', ticket_id=ticket.id) }}">
+              <button type="submit" class="btn btn-warning btn-sm btn-block font-weight-bold">
+                <i class="fas fa-share-alt"></i> {{ _('Propose as Problem') }}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% for action in ticket.actions_nonepost %}
+  <div class="row m-3">
+    <div class="col border rounded p-1 flicket-action">
+      {{ action.output_action()|safe }}
+    </div>
+  </div>
+  {% endfor %} {% for r in replies.items %} {% set ticket = ticket %} {% set
+  _replies = replies %} {% set post = r %} {% set post_loop = loop %} {% set
+  content = post %} {% include('flicket_post.html') %} {% for action in
+  r.actions %}
+  <div class="row m-3">
+    <div class="col border rounded p-1 flicket-action">
+      {{ action.output_action()|safe }}
+    </div>
+  </div>
+  {% endfor %} {% endfor %} {% include('flicket_form_reply.html') %}
+</div>
+
+<script>
+  document
+    .getElementById("toggle-ai-view")
+    .addEventListener("click", function () {
+      const originalView = document.getElementById("original-view");
+      const aiView = document.getElementById("ai-view");
+      const btn = this;
+
+      if (aiView.style.display === "none") {
+        // Switch to AI Mode
+        originalView.style.display = "none";
+        aiView.style.display = "block";
+        btn.innerHTML = '<i class="fas fa-arrow-left"></i> Back to Ticket';
+        btn.classList.replace("btn-outline-info", "btn-secondary");
+      } else {
+        // Switch back to Original Mode
+        originalView.style.display = "block";
+        aiView.style.display = "none";
+        btn.innerHTML = '<i class="fas fa-magic"></i> Toggle AI Insights';
+        btn.classList.replace("btn-secondary", "btn-outline-info");
+      }
+    });
+</script>
+
+{% endblock %}

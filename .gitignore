@@ -1,0 +1,59 @@
+# === Python & Environments ===
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.cache/
+.python-version
+venv/
+__pycache__/
+*.pyc
+tmp/
+<<<<<<< HEAD
+infra-code/
+=======
+>>>>>>> 4f8088860e8baec925221333a09fb45674f75ef7
+
+# === Database & Secrets (CRITICAL) ===
+*.db
+*.sqlite3
+flicket.db
+test.db
+config.json
+config_old.json
+users.json
+.env
+*.tfvars
+*.tfvars.json
+
+# === Terraform ===
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+
+# === Deployment & Server ===
+flicket.ini
+flicket_uswgi.wsgi
+migrations_laptop/
+migrations_desktop/
+
+# === IDEs & OS Noise ===
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*sublime*
+tags
+
+# === Project Specific Junk ===
+__archive__/
+__reference__/
+__other__/
+temp_populate_database_with_junk.py
+test.py
+docs/_build/

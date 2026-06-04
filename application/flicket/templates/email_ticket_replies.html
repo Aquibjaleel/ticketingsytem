@@ -1,0 +1,15 @@
+{% extends "email_base.html" %}
+<!-- extend from base layout -->
+{% block content %}
+    <h1>
+        {{ title }}
+    </h1>
+    {% include('email_include_details.html') %}
+    <p>
+        {{ _('There are new replies to ticket:') }} <a href="{{ ticket_url }}">{{ number }}</a>.
+    </p>
+    <p>
+        {{ reply.user.name }} replied:<br>
+        "{{ reply.content }}"
+    </p>
+{% endblock %}

@@ -1,0 +1,207 @@
+{% extends "flicket_base.html" %}
+{% block content %}
+
+<script src="{{ url_for('flicket_bp.static', filename='js/uri.js') }}"></script>
+
+{% include('flicket_apijson_users.html') %}
+{% include('flicket_apijson_categories.html') %}
+{% include('flicket_apijson_departments.html') %}
+{% include('flicket_apijson_statuses.html') %}
+
+<div class="container">
+
+    <div class="row m-2 p-2 border rounded bg-white d-flex justify-content-between align-items-center">
+        <div class="col">
+            <h1>{{ title }}</h1>
+        </div>
+        <a href="{{ url_for('flicket_bp.kb_create') }}"
+           class="btn btn-primary">
+             <i class="fa fa-plus"></i> Create Knowledge Base
+        </a>
+    </div>
+
+    <!-- search bar -->
+    <div class="row m-2 bg-white p-2 rounded border">
+        <form action=""
+              class="form-inline col-12 p-0"
+              enctype="multipart/form-data"
+              method="post"
+              name="search_kb">
+
+            {{ form.hidden_tag() }}
+
+            <div class="col-md col-6 text-center">
+                {{ form.department(class="form-control form-control-sm flicket-tickets-content p-0", id="department") }}
+            </div>
+
+            <div class="col-md col-6 text-center">
+                {{ form.category(class="form-control form-control-sm flicket-tickets-content p-0", id="category") }}
+            </div>
+
+            <div class="col-md col-6 text-center">
+                {{ form.status(class="form-control form-control-sm flicket-tickets-content p-0", id="status") }}
+            </div>
+
+            <div class="col-md col-6 text-center">
+                {{ form.username(class="form-control form-control-sm flicket-tickets-content", placeholder="username", id="autocomplete-username") }}
+            </div>
+
+            <div class="col-md col-12 text-center">
+                {{ form.content(class="form-control form-control-sm flicket-tickets-content", placeholder="contents") }}
+            </div>
+
+            <div class="col-md col-6 text-center">
+                <input class="btn btn-primary btn-sm" type="submit" value="{{ _('search') }}">
+            </div>
+
+            <div class="col-md col-6 text-center">
+                <a href="{{ url_for('flicket_bp.knowledge_base') }}" class="btn btn-link btn-sm border-primary">
+                    reset
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- sort dropdown -->
+    <div class="row">
+
+        <div class="col m-2">
+            {# {% include('flicket_tickets_pag.html') %} #}
+        </div>
+
+        <div class="col-auto m-2">
+            <div class="dropdown">
+
+                <button type="button"
+                        class="btn btn-sm btn-secondary dropdown-toggle"
+                        data-toggle="dropdown">
+                    {{ _('Sort') }}
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-right">
+
+                    <a class="dropdown-item small{% if sort == 'created_desc' %} active{% endif %}"
+                       href="{{ url_for(base_url, sort='created_desc', **request.args) }}">
+                        {{ _('Newest First') }}
+                    </a>
+
+                    <a class="dropdown-item small{% if sort == 'created_asc' %} active{% endif %}"
+                       href="{{ url_for(base_url, sort='created_asc', **request.args) }}">
+                        {{ _('Oldest First') }}
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- KB results -->
+    <div class="row">
+        <div class="col">
+
+            {% for article in articles.items %}
+
+            <div class="border rounded p-1 m-2 mb-3 bg-white">
+
+                <div class="row m-1 pb-2 border-bottom">
+
+                    <div class="col-md-2 col-6">
+                        <a href="#"
+                           title="knowledge base article">
+                            {{ article.id }}
+                        </a>
+                    </div>
+
+                    <div class="col-md-7 col-12">
+                        {{ article.title }}
+                    </div>
+
+                    <div class="col-md-3 col-6 flicket-tickets-content text-right">
+                        {{ article.created_at }}
+                    </div>
+
+                </div>
+
+                <div class="row m-1">
+
+                    <div class="col-md-4 col-12">
+                        <div class="flicket-tickets-title">
+                            {{ _('category') }}
+                        </div>
+
+                        <div class="flicket-tickets-content">
+                            {{ article.category if article.category else 'Not available' }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-12">
+                        <div class="flicket-tickets-title">
+                            {{ _('issue type') }}
+                        </div>
+
+                        <div class="flicket-tickets-content">
+                            {{ article.issue_type if article.issue_type else 'Not available' }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-12">
+                        <div class="flicket-tickets-title">
+                            {{ _('resolution') }}
+                        </div>
+
+                        <div class="flicket-tickets-content">
+                            {{ article.resolution[:120] if article.resolution else 'Not available' }}
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row m-1 mt-2">
+
+                    <div class="col-md-6 col-12">
+
+                        <div class="flicket-tickets-title">
+                            {{ _('symptoms') }}
+                        </div>
+
+                        <div class="flicket-tickets-content">
+                            {{ article.symptoms[:120] if article.symptoms else 'No symptoms listed' }}
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6 col-12">
+
+                        <div class="flicket-tickets-title">
+                            {{ _('keywords') }}
+                        </div>
+
+                        <div class="flicket-tickets-content">
+                            {{ article.keywords if article.keywords else 'No keywords' }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="row m-2">
+                <div class="col border rounded bg-white p-3 text-center">
+                    No knowledge base articles found.
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

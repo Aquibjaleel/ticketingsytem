@@ -1,0 +1,10 @@
+{% extends "flicket_base.html" %}
+<!-- extend from base layout -->
+{% block content %}
+    <div class="container">
+        <h1>{{ title }}</h1>
+
+        {% include 'flicket_post_box.html' %}
+
+    </div>
+{% endblock %}

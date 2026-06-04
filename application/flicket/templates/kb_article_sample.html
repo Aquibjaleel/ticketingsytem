@@ -1,0 +1,98 @@
+{% extends "flicket_base.html" %}
+
+{% block content %}
+
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card">
+                <div class="card-body">
+
+                    <h1 class="card-title">
+                        {{ article.title if article.title else 'Untitled KB Article' }}
+                    </h1>
+
+                    <p class="card-text">
+                        This knowledge base article was retrieved from AI.
+                    </p>
+
+                    <h2>Article Details</h2>
+
+                    <p>
+                        <strong>Title:</strong>
+                        {{ article.title if article.title else 'No title provided' }}
+                        <br>
+
+                        <strong>Category:</strong>
+                        {{ article.category if article.category else 'No category provided' }}
+                        <br>
+
+                        <strong>Issue Type:</strong>
+                        {{ article.issue_type if article.issue_type else 'No issue type provided' }}
+                        <br>
+
+                        <strong>Published Date:</strong>
+                        {{ article.created_at if article.created_at else 'Published date unavailable' }}
+                    </p>
+
+                    <h2>Summary</h2>
+
+                    <p>
+                        {% if article.title %}
+                            This article provides guidance for resolving:
+                            <strong>{{ article.title }}</strong>.
+                        {% else %}
+                            No summary is available for this article.
+                        {% endif %}
+                    </p>
+
+                    <h2>Symptoms</h2>
+
+                    <p>
+                        {% if article.symptoms %}
+                            {{ article.symptoms }}
+                        {% else %}
+                            No symptoms have been added for this article.
+                        {% endif %}
+                    </p>
+
+                    <h3>Resolution Steps</h3>
+
+                    <p>
+                        {% if article.resolution %}
+                            {{ article.resolution }}
+                        {% else %}
+                            No resolution steps have been added yet.
+                        {% endif %}
+                    </p>
+
+                    <h3>Keywords</h3>
+
+                    <p>
+                        {% if article.keywords %}
+                            {{ article.keywords }}
+                        {% else %}
+                            No keywords are available for this article.
+                        {% endif %}
+                    </p>
+
+                    <h3>Related Articles</h3>
+
+                    <p class="text-muted">
+                        No related articles are available yet.
+                    </p>
+
+                    <a class="btn btn-primary"
+                       href="{{ url_for('flicket_bp.tickets') }}">
+                        Back to Tickets
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

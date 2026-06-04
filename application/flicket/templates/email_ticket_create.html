@@ -1,0 +1,16 @@
+{% extends "email_base.html" %}
+<!-- extend from base layout -->
+{% block content %}
+    <h1>
+        {{ title }}
+    </h1>
+    <p>
+        {{ _('You have successfully created a new ticket:') }} <a href="{{ ticket_url }}">{{ number }}</a>
+    </p>
+    {% include('email_include_details.html') %}
+    <h2>{{ _('Content') }}</h2>
+    <p>
+        {{ ticket.content }}
+    </p>
+
+{% endblock %}

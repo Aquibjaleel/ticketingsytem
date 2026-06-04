@@ -1,0 +1,40 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: flicket
+  description: Ticketing System
+  annotations:
+    backstage.io/techdocs-ref: dir:./application-code/
+    backstage.io/source-location: url:https://dev.azure.com/sandippatel872/Project/_git/Project
+    dev.azure.com/project-repo: Project/Project
+    dev.azure.com/build-definition: Official-Infra-Init-Pipeline
+  tags:
+    - ticket-app
+    - flicket
+  links:
+    - url: https://dev.azure.com/sandippatel872/Project/_git/Project
+      title: Azure Repo
+      icon: source
+      type: source-code
+    - url: https://dev.azure.com/sandippatel872/Project/_build
+      title: Azure Pipelines
+      icon: dashboard
+      type: ci-cd
+spec:
+  type: service
+  lifecycle: development
+  owner: admin
+  providesApis:
+    - flicket-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: flicket-api
+  description: Flicket API
+spec:
+  type: openapi
+  lifecycle: development
+  owner: admin
+  definition:
+    $text: ./backstage-api.yaml

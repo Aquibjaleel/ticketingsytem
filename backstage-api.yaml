@@ -1,0 +1,55 @@
+openapi: 3.0.0
+info:
+  title: Flicket API
+  version: 1.0.0
+  description: Flicket API
+servers:
+  - url: http://localhost:8000/flicket-api
+security:
+  - bearerAuth: []
+paths:
+  /tickets/:
+    get:
+      summary: Get all tickets
+      responses:
+        '200':
+          description: List of tickets
+
+  /ticket/{id}:
+    get:
+      summary: Get ticket by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Ticket details
+
+  /users/:
+    get:
+      summary: Get all users
+      responses:
+        '200':
+          description: List of users
+
+  /user/{id}:
+    get:
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User details
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
