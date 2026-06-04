@@ -6,7 +6,6 @@ env:
     IMAGE_TAG: "latest"
 
 phases:
-phases:
   install:
     commands:
       - echo "Installing jq on build host..."
