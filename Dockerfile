@@ -33,7 +33,7 @@ RUN pip install --upgrade pip \
 COPY . .
 
 # Expose the port your app will run on
-EXPOSE 8000
+EXPOSE 5000
 
 # Run the app using gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "run:app"]
+ENTRYPOINT ["/app/entrypoint.sh"]

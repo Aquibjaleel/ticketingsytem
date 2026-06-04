@@ -14,4 +14,4 @@ cat <<EOF > /app/config.json
 }
 EOF
 
-exec gunicorn --bind 0.0.0.0:5000 app:app
+exec gunicorn --bind 0.0.0.0:5000 application:app
