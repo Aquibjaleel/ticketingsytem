@@ -6,7 +6,7 @@ env:
     IMAGE_TAG: "latest"
 
 phases:
-pre_build:
+  pre_build:
     commands:
       - echo "Ensuring jq is installed..."
       - if ! command -v jq &> /dev/null; then apk add --no-cache jq; fi
