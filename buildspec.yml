@@ -9,15 +9,15 @@ phases:
   pre_build:
     commands:
       - echo "Retrieving credentials..."
-      - # Fetch the full secret object
       - SECRET_DATA=$(aws secretsmanager get-secret-value --secret-id aws --query SecretString --output text)
-      - echo "DEBUG - Secret data received:"
+      - echo "DEBUG - Secret data received"
       - echo $SECRET_DATA
-      - # Try to extract using jq
+      - echo "Extracting credentials using jq"
       - USERNAME=$(echo $SECRET_DATA | jq -r .username)
       - PASSWORD=$(echo $SECRET_DATA | jq -r .password)
-      - echo "DEBUG - Extracted Username: $USERNAME"
-      - echo "Logging into Docker Hub..."
+      - echo "DEBUG - Extracted Username"
+      - echo $USERNAME
+      - echo "Logging into Docker Hub"
       - echo "$PASSWORD" | docker login -u "$USERNAME" --password-stdin
   build:
     commands:
